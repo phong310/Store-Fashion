@@ -1,0 +1,13 @@
+.swiper-vertical .swiper-button-next,
+.swiper-vertical .swiper-button-prev {
+  left: 50%;
+  transform: rotate(90deg);
+  transform-origin: left center;
+}
+.swiper-vertical .swiper-button-prev {
+  top: calc(var(--swiper-navigation-size) / 10);
+}
+.swiper-vertical .swiper-button-next {
+  top: auto;
+  bottom: calc(var(--swiper-navigation-size) / 2);
+}
