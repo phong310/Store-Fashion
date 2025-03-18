@@ -83,6 +83,13 @@ const AuthController = {
                 sameSite: "strict",
             });
 
+            res.cookie("accessToken", accessToken, {
+                httpOnly: true,
+                secure: false,
+                path: "/",
+                sameSite: "strict",
+            });
+
             res.status(200).json({ user, accessToken, refreshToken });
         } catch (e) {
             console.error("Error while finding user", e.message);
@@ -94,6 +101,7 @@ const AuthController = {
     // LOGOUT
     logoutUser: async (req, res) => {
         res.clearCookie("refreshToken");
+        res.clearCookie("accessToken");
         res.status(200).json("Logout success !")
     }
 }

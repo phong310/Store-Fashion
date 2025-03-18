@@ -106,7 +106,7 @@ const Checkout = () => {
         await clearAllCart()
         dispatch(resetCart())
         persistStore(store).purge();
-        navigate('/success')
+        navigate('/')
       }
     } catch (error) {
       console.log(error);

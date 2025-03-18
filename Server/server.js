@@ -9,12 +9,17 @@ const Accessories = require('./router/Accessories')
 const Auth = require("./router/Auth")
 const Orders = require('./router/Orders')
 const Cart = require('./router/Cart')
+const cookieParser = require("cookie-parser");
+
+
 
 const app = express();
 const PORT = 3001;
 
 dotenv.config()
 app.use(bodyParser.json())
+app.use(cookieParser());
+
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,

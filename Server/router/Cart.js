@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const cartController = require("../controller/CartController");
+const verifyToken = require("../middleware/verifyToken");
 
-router.get("/getAllCart", cartController.getAllCart)
+router.get("/getAllCart", verifyToken, cartController.getAllCart)
 
 router.post("/addItemCart", cartController.addNewItemCart);
 
