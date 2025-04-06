@@ -1,4 +1,4 @@
-import { Grid, IconButton, Rating, Typography } from '@mui/material'
+import { Grid, IconButton, Pagination, Rating, Stack, Typography } from '@mui/material'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import "../../CSS/ShoesItem.css"
@@ -90,11 +90,15 @@ export default function ShoesItem() {
   const [ShoeData, setShoeData] = useState([])
   const [itemId, setItemId] = useState()
   const [openDetail, setOpenDetail] = useState(false)
+  const [page, setPage] = useState(1); // Trang hiện tại
+  const [totalShoes, setTotalShoes] = useState()
+  const itemsPerPage = 6; // Số sản phẩm mỗi trang
 
   const getShoeArr = async () => {
     try {
-      const res = await axios.get('http://localhost:3001/shoe-collection/getAll');
-      setShoeData(res.data)
+      const res = await axios.get(`http://localhost:3001/shoe-collection/getAll?page=${page}&limit=${itemsPerPage}`);
+      setShoeData(res.data.shoes)
+      setTotalShoes(res.data.totalShoes)
     } catch (e) {
       console.log('Err', e);
     }
@@ -111,36 +115,50 @@ export default function ShoesItem() {
 
   useEffect(() => {
     getShoeArr()
-  }, [])
+  }, [page])
 
   return (
-    <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center' }}>
-      {ShoeData.map((item, idx) => {
-        return (
-          <Grid item key={idx} sx={{ position: 'relative' }}>
+    <>
+      <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center' }}>
+        {ShoeData.map((item, idx) => {
+          return (
+            <Grid item key={idx} sx={{ position: 'relative' }}>
 
-            <div className="shoe-container">
-              <img src={item.img[0]} style={styleImg} />
-              <div className="overlay"></div>
-              <Grid className="icon-container" display={'flex'} direction={'column'} gap={1}>
-                <IconButton sx={{ ...iconButtonHover }} onClick={() => handelCartIcon(item._id)}>
-                  <ShoppingCartIcon />
-                </IconButton>
-                <IconButton sx={{ ...iconButtonHover }} onClick={() => handleDetail(item._id)}>
-                  <ZoomInIcon />
-                </IconButton>
-              </Grid>
-            </div>
-            <Link to={`/products/${item._id}?type=shoe`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Typography sx={{ ...TypoTitle }}>{item.name}</Typography>
-            </Link>
-            <Rating name="no-value" value={item.rating} />
-            <Typography>{item.price}</Typography>
-          </Grid>
-        )
-      })}
-      <ModalDetail open={openDetail} setOpen={setOpenDetail} id={itemId} />
-    </Grid>
+              <div className="shoe-container">
+                <img src={item.img[0]} style={styleImg} />
+                <div className="overlay"></div>
+                <Grid className="icon-container" display={'flex'} direction={'column'} gap={1}>
+                  <IconButton sx={{ ...iconButtonHover }} onClick={() => handelCartIcon(item._id)}>
+                    <ShoppingCartIcon />
+                  </IconButton>
+                  <IconButton sx={{ ...iconButtonHover }} onClick={() => handleDetail(item._id)}>
+                    <ZoomInIcon />
+                  </IconButton>
+                </Grid>
+              </div>
+              <Link to={`/products/${item._id}?type=shoe`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Typography sx={{ ...TypoTitle }}>{item.name}</Typography>
+              </Link>
+              <Rating name="no-value" value={item.rating} />
+              <Typography>{item.price}</Typography>
+            </Grid>
+          )
+        })}
+        <ModalDetail open={openDetail} setOpen={setOpenDetail} id={itemId} />
+      </Grid>
+      <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
+        <Stack spacing={2}>
+          <Pagination
+            count={Math.ceil(totalShoes / itemsPerPage)} // Tổng số trang dựa vào tổng số sản phẩm
+            page={page}
+            onChange={(event, value) => setPage(value)}
+            variant="outlined"
+            shape="rounded"
+          />
+        </Stack>
+      </Grid>
+    </>
+
   )
 }
 

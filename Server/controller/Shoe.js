@@ -4,12 +4,40 @@ const ShoeController = {
     // GET ALL
     getAllData: async (req, res) => {
         try {
-            const Data = await ShoeModel.find();
-            res.status(200).json(Data)
+            let { page, limit } = req.query;
+
+            // Nếu không truyền page hoặc limit thì lấy toàn bộ sản phẩm
+            if (!page || !limit) {
+                const allShoes = await ShoeModel.find(); // Lấy tất cả sản phẩm
+                return res.status(200).json({
+                    totalShoes: allShoes.length,
+                    shoes: allShoes, // Danh sách sản phẩm đầy đủ
+                });
+            }
+
+            // Nếu có page & limit thì thực hiện phân trang
+            page = parseInt(page);
+            limit = parseInt(limit);
+
+            const totalShoes = await ShoeModel.countDocuments(); // Tổng số sản phẩm
+            const totalPages = Math.ceil(totalShoes / limit); // Số trang
+
+            const Data = await ShoeModel.find()
+                .skip((page - 1) * limit)
+                .limit(limit);
+
+            res.status(200).json({
+                currentPage: page,
+                totalPages,
+                totalShoes,
+                limit,
+                shoes: Data, // Danh sách sản phẩm phân trang
+            });
         } catch (e) {
-            res.status(500).json({ err: e })
+            res.status(500).json({ err: e });
         }
     },
+
 
     // Get by id
     getShoeDetail: async (req, res) => {

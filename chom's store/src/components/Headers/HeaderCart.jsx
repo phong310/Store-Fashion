@@ -43,6 +43,7 @@ export default function HeaderCart() {
         getAllCart()
     }, [user])
 
+
     return (
         <Grid container alignItems={'center'} spacing={4}>
             <Grid item>
@@ -61,7 +62,7 @@ export default function HeaderCart() {
                             <ShoppingBagIcon />
                         </IconButton>
                         <Typography sx={{ mt: 0.5, fontSize: 12, fontWeight: 'bold' }}>
-                            {dataCart?.length} / {formatCurrency(calculateTotal(dataCart))}
+                            {user ? dataCart?.length : 0} / {user ? formatCurrency(calculateTotal(dataCart)) : 0}
                         </Typography>
                     </Grid>
                 </Grid>

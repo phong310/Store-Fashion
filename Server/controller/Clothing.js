@@ -4,8 +4,33 @@ const ClothingController = {
     // Get all
     getAllClothing: async (req, res) => {
         try {
-            const Data = await ClothingModel.find();
-            res.status(200).json(Data)
+            let { page, limit } = req.query;
+
+            if (!page || !limit) {
+                const allClo = await ClothingModel.find();
+                return res.status(200).json({
+                    totalClo: allClo.length,
+                    clothings: allClo,
+                })
+            }
+
+            page = parseInt(page);
+            limit = parseInt(limit);
+            const totalClo = await ClothingModel.countDocuments();
+            const totalPages = Math.ceil(totalClo / limit);
+
+            const data = await ClothingModel.find()
+                .skip((page - 1) * limit)
+                .limit(limit);
+
+            res.status(200).json({
+                currentPage: page,
+                totalPages,
+                totalClo,
+                limit,
+                clothings: data,
+            })
+
         } catch (e) {
             res.status(500).json({ err: e })
         }
@@ -42,7 +67,7 @@ const ClothingController = {
                 rating: req.body.rating,
                 date: req.body.date,
                 status: req.body.status,
-                type:req.body.type
+                type: req.body.type
             }
 
             const dataShoeCollection = new ClothingModel(newData);
@@ -70,7 +95,7 @@ const ClothingController = {
                 best_seller: req.body.best_seller,
                 rating: req.body.rating,
                 date: req.body.date,
-                type:req.body.type,
+                type: req.body.type,
                 status: req.body.status
             }
             const query = { _id: CloId };

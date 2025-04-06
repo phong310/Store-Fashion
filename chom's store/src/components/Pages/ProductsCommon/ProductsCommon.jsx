@@ -88,11 +88,11 @@ export default function ProductsCommon() {
             {type === 'clothing' ? <ClothingItem /> : type === 'accessories' ? <AccessoriesItem /> : <ShoesItem />}
 
           </Grid>
-          <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
+          {/* <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
             <Stack spacing={2}>
               <Pagination count={4} variant="outlined" shape="rounded" />
             </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </>

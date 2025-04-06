@@ -4,8 +4,34 @@ const AccessoriesController = {
     // GET ALL
     getAllData: async (req, res) => {
         try {
-            const Data = await AccessoriesModel.find();
-            res.status(200).json(Data)
+            let { page, limit } = req.query
+
+            if (!page || !limit) {
+                const allAccess = await AccessoriesModel.find()
+                return res.status(200).json({
+                    totalAccess: allAccess.length,
+                    accessories: allAccess,
+                })
+            }
+
+            page = parseInt(page);
+            limit = parseInt(limit);
+            const totalAccess = await AccessoriesModel.countDocuments();
+            const totalPages = Math.ceil(totalAccess / limit);
+
+            const data = await AccessoriesModel.find()
+                .skip((page - 1) * limit)
+                .limit(limit);
+
+            res.status(200).json({
+                currentPage: page,
+                totalPages,
+                totalAccess,
+                limit,
+                accessories: data,
+            })
+
+
         } catch (e) {
             res.status(500).json({ err: e })
         }
