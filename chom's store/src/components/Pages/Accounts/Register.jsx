@@ -105,7 +105,7 @@ export default function Register() {
   );
 }
 
-const styleBtnAdd = {
+export const styleBtnAdd = {
   borderRadius: 20,
   p: 1,
   px: 3,

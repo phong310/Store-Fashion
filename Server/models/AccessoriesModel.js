@@ -55,4 +55,6 @@ const accessorieSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+accessorieSchema.index({ name: 'text', code: 'text' });
+
 module.exports = mongoose.model('AccessoriesModel', accessorieSchema)

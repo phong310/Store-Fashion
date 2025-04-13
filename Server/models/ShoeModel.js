@@ -55,4 +55,6 @@ const shoeSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+shoeSchema.index({ name: 'text', code: 'text' });
+
 module.exports = mongoose.model("ShoeModel", shoeSchema)

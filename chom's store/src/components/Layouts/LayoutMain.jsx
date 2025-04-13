@@ -10,6 +10,7 @@ import ProductsDetail from '../Pages/ProductsDetail/ProductsDetail';
 import RedirectLogin from './RedirectLogin';
 import DefaultLayout from './DefaultLayout';
 import CheckoutLayout from './CheckoutLayout';
+import SearchScreen from '../Pages/Search/SearchScreen';
 
 
 export default function LayoutMain() {
@@ -72,6 +73,15 @@ export default function LayoutMain() {
           <CheckoutLayout>
             <Checkout />
           </CheckoutLayout>
+        }
+      />
+
+      <Route
+        path="/search"
+        element={
+          <DefaultLayout>
+            <SearchScreen />
+          </DefaultLayout>
         }
       />
     </Routes>

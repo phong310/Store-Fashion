@@ -55,4 +55,6 @@ const clothingSchema = new mongoose.Schema({
     }
 }, { timeseries: true })
 
+clothingSchema.index({ name: 'text', code: 'text' });
+
 module.exports = mongoose.model('ClothingModel', clothingSchema)

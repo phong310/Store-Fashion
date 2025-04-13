@@ -10,6 +10,7 @@ const Auth = require("./router/Auth")
 const Orders = require('./router/Orders')
 const Cart = require('./router/Cart')
 const cookieParser = require("cookie-parser");
+const Search = require('./router/Search');
 
 
 
@@ -42,6 +43,8 @@ app.use("/auth", Auth);
 app.use("/order", Orders);
 
 app.use("/cart", Cart)
+
+app.use('/search', Search)
 
 
 

@@ -82,7 +82,7 @@ export default function ClothingItem() {
     )
 }
 
-const styleImg = {
+export const styleImg = {
     width: '100%',
     height: 300,
     maxWidth: 300,

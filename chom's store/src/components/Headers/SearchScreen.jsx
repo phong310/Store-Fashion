@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const RotatableIconButton = styled(IconButton)({
     transition: 'transform 0.2s ease',
@@ -13,10 +14,23 @@ const RotatableIconButton = styled(IconButton)({
 
 export default function SearchScreen({ handleCloseSearch }) {
     const [showSearch, setShowSearch] = useState(false);
+    const [searchTerm, setSearchTerm] = useState(""); 
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         setShowSearch(true);
     }, []);
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearchSubmit = () => {
+        if (searchTerm) {
+            navigate(`/search?q=${searchTerm}`);
+            setShowSearch(false)
+        }
+    };
 
     return (
         <>
@@ -31,13 +45,15 @@ export default function SearchScreen({ handleCloseSearch }) {
                             style={{ ...styleInputSearch }}
                             color='grey'
                             id="standard-adornment-amount"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
                             startAdornment={<InputAdornment position="start">
                                 <SearchIcon sx={{ ...styleIcon }} />
                             </InputAdornment>}
                             placeholder="Tìm..."
                         />
                     </FormControl>
-                    <IconButton>
+                    <IconButton onClick={handleSearchSubmit}>
                         <ArrowForwardIcon sx={{ ...styleIcon }} />
                     </IconButton>
                 </Box>
@@ -76,10 +92,10 @@ const styleIconClose = {
 
 const styleIcon = {
     fontSize: 40
-}
+};
 
 const styleInputSearch = {
     height: 60,
     fontSize: 28,
     fontWeight: 'bold'
-}
+};
