@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Grid, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,10 +10,12 @@ import InputField from '../../Field/InputField';
 import axiosInstance from '../../../config/axiosInstance';
 import { useDispatch } from 'react-redux';
 import { loginFailed, loginSuccess } from '../../../redux/authSlice';
+import LoadingOverLay from '../../Loading/LoadingOverLay';
 
 export default function Login() {
     const navigate = useNavigate()
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false)
     const {
         handleSubmit,
         control,
@@ -23,6 +25,8 @@ export default function Login() {
     });
 
     const onSubmit = async (data) => {
+        setIsLoading(true)
+        const startTime = Date.now();
         const user = { email: data.email, password: data.password };
         try {
             const response = await axiosInstance.post('/auth/login', user);
@@ -35,12 +39,19 @@ export default function Login() {
             toast.error('Đăng nhập thất bại');
             dispatch(loginFailed());
             console.error(error);
+        } finally {
+            const elapsed = Date.now() - startTime;
+            const remaining = 500 - elapsed;
+            setTimeout(() => {
+                setIsLoading(false);
+            }, remaining > 0 ? remaining : 0);
         }
     };
 
     return (
         <>
             <BreadCumbs pageName='Đăng nhập' />
+            {isLoading && <LoadingOverLay />}
             <Typography sx={{ my: 4, ml: { md: 38, sm: 'unset' }, fontWeight: 'bold', fontSize: 28 }}>ĐĂNG NHẬP TÀI KHOẢN</Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container justifyContent={'center'} sx={{ mb: 20 }} gap={4} alignItems={'flex-start'}>

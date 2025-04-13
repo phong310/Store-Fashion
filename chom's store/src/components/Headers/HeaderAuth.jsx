@@ -11,12 +11,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../../config/axiosInstance';
 import { logOutSuccess } from '../../redux/authSlice';
 import { toast } from 'react-toastify';
+import LoadingOverLay from '../Loading/LoadingOverLay';
 
 export default function HeaderAuth() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useSelector((state) => state.auth.login?.currentUser)
     const [anchorElAuth, setAnchorElAuth] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
     const openAuth = Boolean(anchorElAuth);
     const handleClick = (event) => {
         setAnchorElAuth(event.currentTarget);
@@ -25,6 +27,8 @@ export default function HeaderAuth() {
         setAnchorElAuth(null);
     };
     const handleLogout = async () => {
+        setIsLoading(true)
+        const startTime = Date.now();
         try {
             const res = await axiosInstance.post('/auth/logout')
             dispatch(logOutSuccess(res.data))
@@ -32,11 +36,18 @@ export default function HeaderAuth() {
         } catch (e) {
             console.log({ Err: e });
             toast.error('Thất bại')
+        } finally {
+            const elapsed = Date.now() - startTime;
+            const remaining = 500 - elapsed;
+            setTimeout(() => {
+                setIsLoading(false);
+            }, remaining > 0 ? remaining : 0);
         }
 
     }
     return (
         <>
+            {isLoading && <LoadingOverLay />}
             <Grid container alignItems={'center'} justifyContent={'space-between'} sx={{ px: 2 }}>
                 <Grid item>
                     <Grid display={'flex'} alignContent={'center'} style={{ gap: 4 }}>
