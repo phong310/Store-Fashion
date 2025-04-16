@@ -120,7 +120,101 @@ const ShoeController = {
         } catch (e) {
             res.status(500).json({ Err: e })
         }
+    },
+
+    // LỌC
+    filterShoes: async (req, res) => {
+        try {
+            const { sortBy } = req.query;
+
+            // Sắp xếp mặc định
+            let sortQuery = {};
+
+            switch (sortBy) {
+                case 'name-asc':
+                    sortQuery.name = 1;
+                    break;
+                case 'name-desc':
+                    sortQuery.name = -1;
+                    break;
+                case 'price-asc':
+                    sortQuery.price = 1;
+                    break;
+                case 'price-desc':
+                    sortQuery.price = -1;
+                    break;
+                case 'newest':
+                    sortQuery.createdAt = -1;
+                    break;
+                case 'oldest':
+                    sortQuery.createdAt = 1;
+                    break;
+                default:
+                    break;
+            }
+
+            const shoes = await ShoeModel.find().sort(sortQuery);
+
+            res.status(200).json({
+                totalShoes: shoes.length,
+                shoes,
+            });
+        } catch (e) {
+            console.error("Lỗi khi lọc sản phẩm:", e);
+            res.status(500).json({ err: e });
+        }
+    },
+
+    // LỌC THEO GIÁ
+    filterShoesByPrice: async (req, res) => {
+        try {
+            const { minPrice, maxPrice } = req.query;
+
+            // Tạo query điều kiện lọc
+            let priceFilter = {};
+
+            if (minPrice && maxPrice) {
+                priceFilter.price = { $gte: Number(minPrice), $lte: Number(maxPrice) };
+            } else if (minPrice) {
+                priceFilter.price = { $gte: Number(minPrice) };
+            } else if (maxPrice) {
+                priceFilter.price = { $lte: Number(maxPrice) };
+            }
+
+            const shoes = await ShoeModel.find(priceFilter);
+
+            res.status(200).json({
+                totalShoes: shoes.length,
+                shoes,
+            });
+        } catch (e) {
+            console.error("Lỗi khi lọc sản phẩm theo giá:", e);
+            res.status(500).json({ err: e });
+        }
+    },
+
+    // LỌC THEO SIZE
+    filterShoesBySize: async (req, res) => {
+        try {
+            const { size } = req.query;
+
+            if (!size) {
+                return res.status(400).json({ message: "Vui lòng truyền tham số size" });
+            }
+
+            const shoes = await ShoeModel.find({ size: { $in: [Number(size)] } });
+
+            res.status(200).json({
+                totalShoes: shoes.length,
+                shoes,
+            });
+        } catch (e) {
+            console.error("Lỗi khi lọc sản phẩm theo size:", e);
+            res.status(500).json({ err: e });
+        }
     }
+
+
 }
 
 module.exports = ShoeController;

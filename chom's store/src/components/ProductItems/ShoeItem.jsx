@@ -4,8 +4,9 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import "../../CSS/ShoesItem.css"
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ModalDetail from '../Modal/ModalDetail';
+import { formatCurrencyVND } from '../../lib/common';
 
 
 
@@ -85,14 +86,21 @@ export const ArrShoes = [
 ]
 
 
-export default function ShoesItem() {
+export default function ShoesItem({ dataSort }) {
   const navigate = useNavigate()
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const sortBy = queryParams.get('sort')
+  const minPrice = queryParams.get('minPrice');
+  const maxPrice = queryParams.get('maxPrice');
+  const sizeFilter = queryParams.get('size')
   const [ShoeData, setShoeData] = useState([])
   const [itemId, setItemId] = useState()
   const [openDetail, setOpenDetail] = useState(false)
   const [page, setPage] = useState(1); // Trang hiện tại
   const [totalShoes, setTotalShoes] = useState()
   const itemsPerPage = 6; // Số sản phẩm mỗi trang
+
 
   const getShoeArr = async () => {
     try {
@@ -117,10 +125,20 @@ export default function ShoesItem() {
     getShoeArr()
   }, [page])
 
+  useEffect(() => {
+    if (sortBy || minPrice || maxPrice || sizeFilter) {
+      setShoeData(dataSort)
+    } else {
+      getShoeArr()
+    }
+  }, [sortBy, dataSort, minPrice, maxPrice, sizeFilter])
+
   return (
     <>
       <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center' }}>
-        {ShoeData.map((item, idx) => {
+        {ShoeData.length === 0 ? <>
+          <Typography sx={{ mt: 20 }}>Không có sản phẩm nào trong danh mục này.</Typography>
+        </> : ShoeData.map((item, idx) => {
           return (
             <Grid item key={idx} sx={{ position: 'relative' }}>
 
@@ -140,13 +158,13 @@ export default function ShoesItem() {
                 <Typography sx={{ ...TypoTitle }}>{item.name}</Typography>
               </Link>
               <Rating name="no-value" value={item.rating} />
-              <Typography>{item.price}</Typography>
+              <Typography>{formatCurrencyVND(item.price)}</Typography>
             </Grid>
           )
         })}
         <ModalDetail open={openDetail} setOpen={setOpenDetail} id={itemId} />
       </Grid>
-      <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
+      {sortBy || minPrice || maxPrice || sizeFilter ? '' : <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
         <Stack spacing={2}>
           <Pagination
             count={Math.ceil(totalShoes / itemsPerPage)} // Tổng số trang dựa vào tổng số sản phẩm
@@ -156,7 +174,8 @@ export default function ShoesItem() {
             shape="rounded"
           />
         </Stack>
-      </Grid>
+      </Grid>}
+
     </>
 
   )

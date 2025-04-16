@@ -7,6 +7,7 @@ import "../../CSS/ShoesItem.css"
 import { Link } from 'react-router-dom';
 import ModalDetail from '../Modal/ModalDetail';
 import ModalCart from '../Modal/ModalCart';
+import { formatCurrencyVND } from '../../lib/common';
 
 
 export default function ClothingItem() {
@@ -59,7 +60,7 @@ export default function ClothingItem() {
                                 <Typography sx={{ ...TypoTitle }}>{item.name}</Typography>
                             </Link>
                             <Rating name="no-value" value={item.rating} />
-                            <Typography>{item.price}</Typography>
+                            <Typography>{formatCurrencyVND(item.price)}</Typography>
                         </Grid>
                     )
                 })}

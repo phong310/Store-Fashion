@@ -6,6 +6,7 @@ import axios from 'axios';
 import "../../CSS/ShoesItem.css"
 import { Link } from 'react-router-dom';
 import ModalDetail from '../Modal/ModalDetail';
+import { formatCurrencyVND } from '../../lib/common';
 
 export default function AccessoriesItem() {
     const [AccessoriesArr, setAccessoriesArr] = useState([]);
@@ -56,7 +57,7 @@ export default function AccessoriesItem() {
                                 <Typography sx={{ ...TypoTitle }}>{item.name}</Typography>
                             </Link>
                             <Rating name="no-value" value={item.rating} />
-                            <Typography>{item.price}</Typography>
+                            <Typography>{formatCurrencyVND(item.price)}</Typography>
                         </Grid>
                     )
                 })}
