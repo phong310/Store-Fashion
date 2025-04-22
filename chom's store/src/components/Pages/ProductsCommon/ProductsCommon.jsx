@@ -24,7 +24,7 @@ export default function ProductsCommon() {
   const [sortBy, setSortBy] = useState('');
   const [sortLabel, setSortLabel] = useState('Sắp xếp theo');
   const [data, setData] = useState([]);
-
+  const typeUrl = type === 'clothing' ? 'clothing-collection' : type === 'shoe' ? 'shoe-collection' : 'accessories-collection'
   const handleClick = (event) => {
     setAnchorElRanger(event.currentTarget);
   };
@@ -35,9 +35,15 @@ export default function ProductsCommon() {
 
   const filterData = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/shoe-collection/filter?sortBy=${sortBy}`);
+      const res = await fetch(`http://localhost:3001/${typeUrl}/filter?sortBy=${sortBy}`);
       const result = await res.json();
-      setData(result.shoes);
+      if (type === 'shoe') {
+        setData(result.shoes);
+      } else if (type === 'clothing') {
+        setData(result.clothings)
+      } else {
+        setData(result.accessories)
+      }
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu:", error);
     }
@@ -45,9 +51,15 @@ export default function ProductsCommon() {
 
   const filterPriceRange = async (min, max) => {
     try {
-      const res = await fetch(`http://localhost:3001/shoe-collection/filter-price?minPrice=${min}&maxPrice=${max}`)
+      const res = await fetch(`http://localhost:3001/${typeUrl}/filter-price?minPrice=${min}&maxPrice=${max}`)
       const result = await res.json();
-      setData(result.shoes);
+      if (type === 'shoe') {
+        setData(result.shoes);
+      } else if (type === 'clothing') {
+        setData(result.clothings)
+      } else {
+        setData(result.accessories)
+      }
     } catch (err) {
       console.error(err)
     }
@@ -55,9 +67,13 @@ export default function ProductsCommon() {
 
   const filterSize = async (size) => {
     try {
-      const res = await fetch(`http://localhost:3001/shoe-collection/filter/size?size=${size}`)
+      const res = await fetch(`http://localhost:3001/${typeUrl}/filter/size?size=${size}`)
       const result = await res.json();
-      setData(result.shoes);
+      if (type === 'shoe') {
+        setData(result.shoes);
+      } else if (type === 'clothing') {
+        setData(result.clothings)
+      }
     } catch (error) {
       console.error(error)
     }
@@ -150,7 +166,7 @@ export default function ProductsCommon() {
           <Categories />
           <PriceFilter onPriceChange={handlePriceChange} />
           <ColorFilter />
-          <SizeFilter onSizeChange={handleSizeChange} />
+          <SizeFilter onSizeChange={handleSizeChange} type={type} />
           <ProductFilter />
           <OutstandingPrd />
         </Grid>
@@ -197,7 +213,7 @@ export default function ProductsCommon() {
             </Menu>
           </Grid>
           <Grid sx={{ mt: 3 }}>
-            {type === 'clothing' ? <ClothingItem /> : type === 'accessories' ? <AccessoriesItem /> : <ShoesItem dataSort={data} />}
+            {type === 'clothing' ? <ClothingItem dataSort={data} /> : type === 'accessories' ? <AccessoriesItem dataSort={data} /> : <ShoesItem dataSort={data} />}
           </Grid>
         </Grid>
       </Grid>

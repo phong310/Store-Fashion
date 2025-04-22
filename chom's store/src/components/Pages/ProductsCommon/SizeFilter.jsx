@@ -1,8 +1,8 @@
 import { Divider, Grid, Typography, Checkbox, FormControlLabel, FormGroup, Box } from '@mui/material'
 import React, { useState } from 'react'
 
-export default function SizeFilter({ onSizeChange }) {
-    const [selectedSize, setSelectedSize] = useState(); 
+export default function SizeFilter({ onSizeChange, type }) {
+    const [selectedSize, setSelectedSize] = useState();
 
     const SizeArr = [
         { id: 1, label: '4.5' },
@@ -25,6 +25,13 @@ export default function SizeFilter({ onSizeChange }) {
         { id: 18, label: '13' },
     ]
 
+    const sizeClo = [
+        { id: 1, label: 'S' },
+        { id: 2, label: 'M' },
+        { id: 3, label: 'L' },
+        { id: 4, label: 'XL' },
+    ]
+
     const handleCheckboxSize = (event, value) => {
         if (selectedSize === value) {
             setSelectedSize();
@@ -38,10 +45,23 @@ export default function SizeFilter({ onSizeChange }) {
     return (
         <>
             <Grid>
-                <Typography sx={{ ...styleTitle, mt: 4, mb: 2 }}>KÍCH THƯỚC</Typography>
+                {type === 'accessories' ? '' : <Typography sx={{ ...styleTitle, mt: 4, mb: 2 }}>KÍCH THƯỚC</Typography>}
                 <Box sx={{ ...styleScrollBar, maxHeight: 200, maxWidth: 260, overflowY: 'auto' }}>
                     <FormGroup>
-                        {SizeArr.map((item, idx) => (
+                        {type === 'clothing' ? sizeClo.map((item, idx) => (
+                            <FormControlLabel
+                                key={idx}
+                                control={
+                                    <Checkbox
+                                        color="default"
+                                        size="small"
+                                        checked={selectedSize === item.label}
+                                        onChange={(e) => handleCheckboxSize(e, item.label)}
+                                    />
+                                }
+                                label={item.label}
+                            />
+                        )) : type === 'accessories' ? '' : SizeArr.map((item, idx) => (
                             <FormControlLabel
                                 key={idx}
                                 control={
@@ -58,9 +78,10 @@ export default function SizeFilter({ onSizeChange }) {
                     </FormGroup>
                 </Box>
             </Grid>
-            <Grid sx={{ mr: 5, mt: 4 }} >
+            {type === 'accessories' ? '' : <Grid sx={{ mr: 5, mt: 4 }} >
                 <Divider />
-            </Grid>
+            </Grid>}
+
         </>
     )
 }

@@ -4,17 +4,23 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import axios from 'axios';
 import "../../CSS/ShoesItem.css"
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ModalDetail from '../Modal/ModalDetail';
 import { formatCurrencyVND } from '../../lib/common';
 
-export default function AccessoriesItem() {
+export default function AccessoriesItem({ dataSort }) {
     const [AccessoriesArr, setAccessoriesArr] = useState([]);
     const [itemId, setItemId] = useState()
     const [openDetail, setOpenDetail] = useState(false)
     const [page, setPage] = useState(1); // Trang hiện tại
     const [totalAccess, setTotalAccess] = useState()
     const itemsPerPage = 6; // Số sản phẩm mỗi trang
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const sortBy = queryParams.get('sort')
+    const minPrice = queryParams.get('minPrice');
+    const maxPrice = queryParams.get('maxPrice');
+
 
     const getAsscessorisArr = async () => {
         try {
@@ -35,10 +41,20 @@ export default function AccessoriesItem() {
         getAsscessorisArr()
     }, [page])
 
+    useEffect(() => {
+        if (sortBy || minPrice || maxPrice) {
+            setAccessoriesArr(dataSort)
+        } else {
+            getAsscessorisArr()
+        }
+    }, [sortBy, dataSort, minPrice, maxPrice])
+
     return (
         <>
             <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center' }}>
-                {AccessoriesArr.map((item, idx) => {
+                {AccessoriesArr.length === 0 ? <>
+                    <Typography sx={{ mt: 20 }}>Không có sản phẩm nào trong danh mục này.</Typography>
+                </> : AccessoriesArr.map((item, idx) => {
                     return (
                         <Grid item key={idx} sx={{ position: 'relative' }}>
                             <div className="shoe-container">
@@ -63,7 +79,7 @@ export default function AccessoriesItem() {
                 })}
                 <ModalDetail open={openDetail} setOpen={setOpenDetail} id={itemId} />
             </Grid>
-            <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
+            {sortBy || maxPrice || minPrice ? '' : <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
                 <Stack spacing={2}>
                     <Pagination
                         count={Math.ceil(totalAccess / itemsPerPage)} // Tổng số trang dựa vào tổng số sản phẩm
@@ -73,7 +89,8 @@ export default function AccessoriesItem() {
                         shape="rounded"
                     />
                 </Stack>
-            </Grid>
+            </Grid>}
+
         </>
 
     )

@@ -4,13 +4,13 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import axios from 'axios';
 import "../../CSS/ShoesItem.css"
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ModalDetail from '../Modal/ModalDetail';
 import ModalCart from '../Modal/ModalCart';
 import { formatCurrencyVND } from '../../lib/common';
 
 
-export default function ClothingItem() {
+export default function ClothingItem({ dataSort }) {
     const [ClothingArr, setClothingArr] = useState([])
     const [itemId, setItemId] = useState()
     const [openDetail, setOpenDetail] = useState(false)
@@ -18,6 +18,13 @@ export default function ClothingItem() {
     const [page, setPage] = useState(1); // Trang hiện tại
     const [totalClo, setTotalClo] = useState()
     const itemsPerPage = 6; // Số sản phẩm mỗi trang
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const sortBy = queryParams.get('sort')
+    const sizeFilter = queryParams.get('size')
+    const minPrice = queryParams.get('minPrice');
+    const maxPrice = queryParams.get('maxPrice');
+
 
     const getClothingArr = async () => {
         try {
@@ -38,10 +45,21 @@ export default function ClothingItem() {
         getClothingArr()
     }, [page])
 
+    useEffect(() => {
+        if (sortBy || sizeFilter || minPrice || maxPrice) {
+            setClothingArr(dataSort)
+        } else {
+            getClothingArr()
+        }
+    }, [sortBy, dataSort, sizeFilter, minPrice, maxPrice])
+
+
     return (
         <>
             <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center' }}>
-                {ClothingArr.map((item, idx) => {
+                {ClothingArr.length === 0 ? <>
+                    <Typography sx={{ mt: 20 }}>Không có sản phẩm nào trong danh mục này.</Typography>
+                </> : ClothingArr.map((item, idx) => {
                     return (
                         <Grid item key={idx} sx={{ position: 'relative' }}>
                             <div className="shoe-container">
@@ -67,7 +85,7 @@ export default function ClothingItem() {
                 <ModalDetail open={openDetail} setOpen={setOpenDetail} id={itemId} />
                 <ModalCart open={openCart} setOpen={setOpenCart} />
             </Grid>
-            <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
+            {sortBy || sizeFilter || minPrice || maxPrice ? '' : <Grid display={'flex'} justifyContent={'center'} sx={{ mt: 10 }}>
                 <Stack spacing={2}>
                     <Pagination
                         count={Math.ceil(totalClo / itemsPerPage)} // Tổng số trang dựa vào tổng số sản phẩm
@@ -77,7 +95,8 @@ export default function ClothingItem() {
                         shape="rounded"
                     />
                 </Stack>
-            </Grid>
+            </Grid>}
+
         </>
 
     )
