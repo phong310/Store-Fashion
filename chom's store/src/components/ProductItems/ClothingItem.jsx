@@ -10,7 +10,7 @@ import ModalCart from '../Modal/ModalCart';
 import { formatCurrencyVND } from '../../lib/common';
 
 
-export default function ClothingItem({ dataSort }) {
+export default function ClothingItem({ dataSort, setPrdLength }) {
     const [ClothingArr, setClothingArr] = useState([])
     const [itemId, setItemId] = useState()
     const [openDetail, setOpenDetail] = useState(false)
@@ -31,6 +31,7 @@ export default function ClothingItem({ dataSort }) {
             const res = await axios.get(`http://localhost:3001/clothing-collection/getAll?page=${page}&limit=${itemsPerPage}`);
             setClothingArr(res.data.clothings)
             setTotalClo(res.data.totalClo)
+            setPrdLength(res.data.totalClo)
         } catch (e) {
             console.log('Err', e);
         }

@@ -8,7 +8,7 @@ import { Link, useLocation } from 'react-router-dom';
 import ModalDetail from '../Modal/ModalDetail';
 import { formatCurrencyVND } from '../../lib/common';
 
-export default function AccessoriesItem({ dataSort }) {
+export default function AccessoriesItem({ dataSort, setPrdLength }) {
     const [AccessoriesArr, setAccessoriesArr] = useState([]);
     const [itemId, setItemId] = useState()
     const [openDetail, setOpenDetail] = useState(false)
@@ -27,6 +27,7 @@ export default function AccessoriesItem({ dataSort }) {
             const res = await axios.get(`http://localhost:3001/accessories-collection/getAll?page=${page}&limit=${itemsPerPage}`);
             setAccessoriesArr(res.data.accessories)
             setTotalAccess(res.data.totalAccess)
+            setPrdLength(res.data.totalAccess)
         } catch (e) {
             console.log('Err', e);
         }

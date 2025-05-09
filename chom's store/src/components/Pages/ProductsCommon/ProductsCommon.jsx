@@ -21,10 +21,16 @@ export default function ProductsCommon() {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const type = queryParams.get('type');
+  const sortValue = queryParams.get('sort');
+  const minPrice = queryParams.get('minPrice');
+  const maxPrice = queryParams.get('maxPrice');
+  const sizeShoe = queryParams.get('size')
   const [sortBy, setSortBy] = useState('');
   const [sortLabel, setSortLabel] = useState('Sắp xếp theo');
   const [data, setData] = useState([]);
   const typeUrl = type === 'clothing' ? 'clothing-collection' : type === 'shoe' ? 'shoe-collection' : 'accessories-collection'
+  const [prdLength, setPrdLength] = useState()
+
   const handleClick = (event) => {
     setAnchorElRanger(event.currentTarget);
   };
@@ -142,12 +148,6 @@ export default function ProductsCommon() {
 
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const sortValue = queryParams.get('sort');
-    const minPrice = queryParams.get('minPrice');
-    const maxPrice = queryParams.get('maxPrice');
-    const sizeShoe = queryParams.get('size')
-
     if (minPrice || maxPrice) {
       filterPriceRange(minPrice || '', maxPrice || '');
     } else if (sortValue) {
@@ -173,7 +173,9 @@ export default function ProductsCommon() {
         <Grid item sm={9}>
           <Grid display={'flex'} justifyContent={'space-between'} alignItems={'flex-start'} gap={4} sx={{ borderBottom: '1px solid #ebebeb' }}>
             <Typography sx={{ ...styleTitle }}>
-              {type === 'clothing' ? 'Clothing' : type === 'shoe' ? 'Shoe' : 'Accessories'}
+              {type === 'clothing' ? `Quần áo (${prdLength && !minPrice && !maxPrice && !sizeShoe ? prdLength : data.length} sản phẩm)`
+                : type === 'shoe' ? `Giày (${prdLength && !minPrice && !maxPrice && !sizeShoe ? prdLength : data.length} sản phẩm)`
+                  : `Phụ kiện tổng hợp (${prdLength && !minPrice && !maxPrice && !sizeShoe ? prdLength : data.length} sản phẩm)`}
             </Typography>
             <Button
               id="basic-button"
@@ -213,7 +215,11 @@ export default function ProductsCommon() {
             </Menu>
           </Grid>
           <Grid sx={{ mt: 3 }}>
-            {type === 'clothing' ? <ClothingItem dataSort={data} /> : type === 'accessories' ? <AccessoriesItem dataSort={data} /> : <ShoesItem dataSort={data} />}
+            {type === 'clothing' ?
+              <ClothingItem dataSort={data} setPrdLength={setPrdLength} />
+              : type === 'accessories' ?
+                <AccessoriesItem dataSort={data} setPrdLength={setPrdLength} />
+                : <ShoesItem dataSort={data} setPrdLength={setPrdLength} />}
           </Grid>
         </Grid>
       </Grid>

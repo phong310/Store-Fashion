@@ -86,7 +86,7 @@ export const ArrShoes = [
 ]
 
 
-export default function ShoesItem({ dataSort }) {
+export default function ShoesItem({ dataSort, setPrdLength }) {
   const navigate = useNavigate()
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -107,6 +107,7 @@ export default function ShoesItem({ dataSort }) {
       const res = await axios.get(`http://localhost:3001/shoe-collection/getAll?page=${page}&limit=${itemsPerPage}`);
       setShoeData(res.data.shoes)
       setTotalShoes(res.data.totalShoes)
+      setPrdLength(res.data.totalShoes)
     } catch (e) {
       console.log('Err', e);
     }
