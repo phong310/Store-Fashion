@@ -21,6 +21,9 @@ import { useMediaQuery, useTheme } from '@mui/material'
 export default function Home() {
     const theme = useTheme();
     const hidden = useMediaQuery(theme.breakpoints.up('md'))
+    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+
+    const cols = isMd ? 1 : 2;
 
     const imgCover = [
         {
@@ -101,7 +104,7 @@ export default function Home() {
             </Grid>
             <Grid container justifyContent={'center'} spacing={6} sx={{ ...styleGridPolicy }}>
                 <Grid item sm={8}>
-                    <ImageList variant="masonry" gap={20} cols={2} >
+                    <ImageList variant="masonry" gap={20} cols={cols} >
                         {imgFeature.map((item) => (
                             <ImageListItem key={item.stt} sx={{ ...styleImgZoom }}>
                                 <div className='shineEffet'>

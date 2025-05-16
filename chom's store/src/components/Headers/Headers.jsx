@@ -7,6 +7,8 @@ import LogoTheWind from '../../assets/thewind2/2.png';
 import HeaderAuth from './HeaderAuth';
 import HeaderCart from './HeaderCart';
 import MenuPrd from './MenuPrd';
+import HeaderMobile from './HeaderMobile';
+
 
 export default function Headers() {
     const navigate = useNavigate()
@@ -72,12 +74,15 @@ export default function Headers() {
                 ...BoxContainer,
                 top: showHeaderAuth ? '34px' : '0',
             }}>
-                <Grid container alignItems={'center'} justifyContent={'space-between'} sx={{ px: 3 }}>
+                <Grid container alignItems={'center'} alignContent={'center'} sx={{ px: 3 }}>
+                    {/* Logo */}
                     <Grid item>
-                        <Grid container alignItems={'center'} spacing={1}>
-                            <Grid item>
-                                <img src={LogoTheWind} style={{ width: 90, height: 90 }} />
-                            </Grid>
+                        <img src={LogoTheWind} style={{ width: 90, height: 90 }} />
+                    </Grid>
+
+                    {/* Menu - xuất hiện từ lg trở lên */}
+                    <Grid item sx={{ display: { xs: 'none', md: 'none', lg: 'flex' }, flexWrap: 'wrap', }}>
+                        <Grid container spacing={1} alignItems={'center'}>
                             <Grid item>
                                 <Button sx={{ ...styleMenuButtonMain }} onClick={() => navigate('/')}>TRANG CHỦ</Button>
                             </Grid>
@@ -120,7 +125,6 @@ export default function Headers() {
                                 anchorEl={anchorNews}
                                 open={openNew}
                                 MenuListProps={{ onMouseLeave: handleCloseNews }}
-
                             >
                                 <MenuItem onClick={handleCloseNews} sx={{ ...fontSizeComon }}> WHAT'S NEW</MenuItem>
                                 <MenuItem onClick={handleCloseNews} sx={{ ...fontSizeComon }}> REVIEW</MenuItem>
@@ -137,11 +141,24 @@ export default function Headers() {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid item>
+
+                    {/* Giỏ hàng giữ nguyên */}
+                    <Grid item sx={{ position: 'absolute', right: 24 }}>
                         <HeaderCart />
                     </Grid>
                 </Grid>
-                <Divider variant="fullWidth" />
+
+                <Divider variant="fullWidth" sx={{ display: { xs: 'none', md: 'none', lg: 'flex' }}}/>
+
+                {/* Menu mobile*/}
+                <HeaderMobile
+                    handleClose={handleClose}
+                    handleClothing={handleClothing}
+                    handleAccess={handleAccess}
+                    handleShoes={handleShoes}
+                />
+            
+
             </Box>
 
 

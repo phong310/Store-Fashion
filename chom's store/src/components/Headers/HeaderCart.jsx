@@ -46,10 +46,10 @@ export default function HeaderCart() {
 
     return (
         <Grid container alignItems={'center'} spacing={4}>
-            <Grid item>
+            <Grid item sx={{ display: { xs: 'none', md: 'none', lg: 'flex' }}}>
                 <Button variant="contained" sx={{ ...styleButton }}>ĐẶT HÀNG</Button>
             </Grid>
-            <Divider orientation="vertical" flexItem sx={{ height: 100, mt: 4 }} />
+            <Divider orientation="vertical" flexItem sx={{ height: 100, mt: 4, display: { xs: 'none', md: 'none', lg: 'flex' } }} />
             <Grid item>
                 <Grid container alignItems={'center'} spacing={1}>
                     <Grid item>

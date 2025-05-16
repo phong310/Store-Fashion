@@ -48,8 +48,8 @@ export default function HeaderAuth() {
     return (
         <>
             {isLoading && <LoadingOverLay />}
-            <Grid container alignItems={'center'} justifyContent={'space-between'} sx={{ px: 2 }}>
-                <Grid item>
+            <Grid container alignItems={'center'} sx={{ px: 2, justifyContent:{xs:'center', md:'space-between'} }}>
+                <Grid item sx={{display:{xs:'none', md:'flex'}}}>
                     <Grid display={'flex'} alignContent={'center'} style={{ gap: 4 }}>
                         <LocalPhoneIcon sx={{ fontSize: 16 }} />
                         <Typography sx={{ ...styleMenuButton }}>HỖ TRỢ MIỄN PHÍ: 0586558886</Typography>

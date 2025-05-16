@@ -1,7 +1,10 @@
-import { Grid, ImageList, ImageListItem, ImageListItemBar, Typography } from '@mui/material'
-import React from 'react'
+import { Grid, ImageList, ImageListItem, ImageListItemBar, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 export default function NewArrivals() {
+        const theme = useTheme();
+            const isMd = useMediaQuery(theme.breakpoints.down('md'));
+        
+            const cols = isMd ? 1 : 3;
 
     const NewArrivalsTop = [
         {
@@ -26,7 +29,15 @@ export default function NewArrivals() {
             <Typography variant='h4' sx={{ ...styleTitle }}>NEW ARRIVALS</Typography>
             <Grid container justifyContent={'center'} sx={{ ...gridContainer }}>
                 <Grid item xs={12} sm={8}>
-                    <ImageList variant="masonry" cols={3} gap={8} sx={{ ...imgList }}>
+                    <ImageList variant="masonry"
+                        cols={cols}
+                        gap={8}
+                        sx={{
+                            position: 'relative',
+                            zIndex: 0,
+                            transform: { xs: 'none', md: 'translateY(-10%)' },
+                            transition: 'transform 0.3s ease',
+                        }}>
                         {NewArrivalsTop.map((item, idx) => (
                             <ImageListItem key={idx} sx={{ ...imgListItem }}>
                                 <img
@@ -63,8 +74,9 @@ const gridContainer = {
 const imgList = {
     position: 'relative',
     zIndex: 0,
-    transform: 'translateY(-10%)',
-}
+    mt: { xs: 4, sm: 6, md: 8, lg: 10 }, // dùng margin-top responsive thay vì translate
+};
+
 
 const imgListItem = {
     position: 'relative',

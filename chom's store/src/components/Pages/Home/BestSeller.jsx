@@ -17,7 +17,7 @@ export default function BestSeller() {
     return (
         <>
             <Typography variant='h4' sx={{ ...styleTitle }}>BEST SELLER</Typography>
-            <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center', px: 30 }}>
+            <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center', px: { md: 3, lg: 30 } }}>
                 {bestSellingItems.map((item, idx) => {
                     return (
                         <Grid item key={idx} sx={{ position: 'relative' }}>
@@ -121,7 +121,7 @@ const styleImg = {
     width: '100%',
     height: 300,
     maxWidth: 300,
-    objectFit: 'cover'
+    objectFit: 'contain'
 }
 
 
