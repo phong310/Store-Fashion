@@ -25,14 +25,14 @@ export default function Register() {
       email: data.email,
       password: data.password,
       confirm: data.confirmPassword,
-    }
+    };
     try {
       const res = await axiosInstance.post('/auth/register', newUser);
       if (res) {
-        toast.success('Đăng ký thành công')
-        navigate('/account/login')
+        toast.success('Đăng ký thành công');
+        navigate('/account/login');
       } else {
-        toast.error('Đăng ký thất bại !')
+        toast.error('Đăng ký thất bại !');
       }
     } catch (e) {
       console.log({ Err: e });
@@ -42,13 +42,30 @@ export default function Register() {
   return (
     <>
       <BreadCumbs pageName="Đăng ký" />
-      <Grid sx={{ ml: { md: 38, sm: 'unset' } }}>
-        <Typography sx={{ my: 4, fontWeight: 'bold', fontSize: 28 }}>ĐĂNG KÝ TÀI KHOẢN</Typography>
-        <Typography sx={{ mb: 2 }}>Nếu chưa có tài khoản vui lòng đăng ký tại đây</Typography>
+      <Grid sx={{ px: { xs: 2, md: 38 }, textAlign: { xs: 'center', md: 'left' } }}>
+        <Typography
+          sx={{
+            my: 4,
+            fontWeight: 'bold',
+            fontSize: { xs: 22, sm: 26, md: 28 },
+          }}
+        >
+          ĐĂNG KÝ TÀI KHOẢN
+        </Typography>
+        <Typography sx={{ mb: 2 }}>
+          Nếu chưa có tài khoản vui lòng đăng ký tại đây
+        </Typography>
       </Grid>
+
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container justifyContent="center" alignItems="center" gap={4}>
-          <Grid item xs={12} sm={12} md={4}>
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="flex-start"
+          spacing={4}
+          sx={{ px: { xs: 2, md: 0 } }}
+        >
+          <Grid item xs={12} md={4}>
             <InputField
               name="fullName"
               control={control}
@@ -65,7 +82,8 @@ export default function Register() {
               helperText={errors.password?.message}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+
+          <Grid item xs={12} md={4}>
             <InputField
               name="email"
               control={control}
@@ -83,22 +101,28 @@ export default function Register() {
             />
           </Grid>
         </Grid>
+
         <Grid
-          display="flex"
+          container
+          justifyContent={{ xs: 'center', md: 'flex-start' }}
           alignItems="center"
-          gap={4}
-          sx={{ mb: 20, ml: { md: 38, sm: 'unset' } }}
+          sx={{ mt: 4, mb: 20, px: { xs: 2, md: 38 } }}
+          spacing={2}
         >
-          <Button type="submit" variant="contained" sx={styleBtnAdd}>
-            Đăng ký
-          </Button>
-          <Button
-            variant="text"
-            sx={{ color: 'black', textDecoration: 'underline' }}
-            onClick={() => navigate('/account/login')}
-          >
-            Đăng nhập
-          </Button>
+          <Grid item>
+            <Button type="submit" variant="contained" sx={styleBtnAdd}>
+              Đăng ký
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="text"
+              sx={{ color: 'black', textDecoration: 'underline' }}
+              onClick={() => navigate('/account/login')}
+            >
+              Đăng nhập
+            </Button>
+          </Grid>
         </Grid>
       </form>
     </>

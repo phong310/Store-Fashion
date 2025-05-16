@@ -13,9 +13,10 @@ import { loginFailed, loginSuccess } from '../../../redux/authSlice';
 import LoadingOverLay from '../../Loading/LoadingOverLay';
 
 export default function Login() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+
     const {
         handleSubmit,
         control,
@@ -25,7 +26,7 @@ export default function Login() {
     });
 
     const onSubmit = async (data) => {
-        setIsLoading(true)
+        setIsLoading(true);
         const startTime = Date.now();
         const user = { email: data.email, password: data.password };
         try {
@@ -50,13 +51,32 @@ export default function Login() {
 
     return (
         <>
-            <BreadCumbs pageName='Đăng nhập' />
+            <BreadCumbs pageName="Đăng nhập" />
             {isLoading && <LoadingOverLay />}
-            <Typography sx={{ my: 4, ml: { md: 38, sm: 'unset' }, fontWeight: 'bold', fontSize: 28 }}>ĐĂNG NHẬP TÀI KHOẢN</Typography>
+            <Typography
+                sx={{
+                    my: 4,
+                    ml: { xs: 2, md: 38 },
+                    fontWeight: 'bold',
+                    fontSize: { xs: 22, sm: 26, md: 28 },
+                    textAlign: { xs: 'center', md: 'left' },
+                }}
+            >
+                ĐĂNG NHẬP TÀI KHOẢN
+            </Typography>
+
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container justifyContent={'center'} sx={{ mb: 20 }} gap={4} alignItems={'flex-start'}>
-                    <Grid item sm={12} md={4}>
-                        <Typography sx={{ mb: 2 }}>Nếu bạn đã có tài khoản, đăng nhập tại đây.</Typography>
+                <Grid
+                    container
+                    justifyContent="center"
+                    alignItems="flex-start"
+                    sx={{ mb: 10, px: { xs: 2, md: 0 } }}
+                    spacing={4}
+                >
+                    <Grid item xs={12} md={4}>
+                        <Typography sx={{ mb: 2 }}>
+                            Nếu bạn đã có tài khoản, đăng nhập tại đây.
+                        </Typography>
                         <Grid sx={{ mb: 2 }}>
                             <InputField
                                 name="email"
@@ -76,13 +96,24 @@ export default function Login() {
                                 helperText={errors.password?.message}
                             />
                         </Grid>
-                        <Grid display={'flex'} alignItems={'center'} gap={4}>
-                            <Button type='submit' variant="contained" sx={{ ...styleBtnAdd }}>Đăng nhập</Button>
-                            <Button variant="text" sx={{ color: 'black', textDecoration: 'underline' }} onClick={() => navigate('/account/register')}>Đăng ký</Button>
+                        <Grid display="flex" flexWrap="wrap" gap={2}>
+                            <Button type="submit" variant="contained" sx={{ ...styleBtnAdd }}>
+                                Đăng nhập
+                            </Button>
+                            <Button
+                                variant="text"
+                                sx={{ color: 'black', textDecoration: 'underline' }}
+                                onClick={() => navigate('/account/register')}
+                            >
+                                Đăng ký
+                            </Button>
                         </Grid>
                     </Grid>
-                    <Grid item sm={12} md={4}>
-                        {/* <Typography sx={{ mb: 2 }}>Bạn quên mật khẩu? Nhập địa chỉ email để lấy lại mật khẩu qua email.</Typography>
+
+                    <Grid item xs={12} md={4}>
+                        <Typography sx={{ mb: 2 }}>
+                            Bạn quên mật khẩu? Nhập địa chỉ email để lấy lại mật khẩu qua email.
+                        </Typography>
                         <Grid sx={{ mb: 2 }}>
                             <InputField
                                 name="emailForget"
@@ -91,14 +122,15 @@ export default function Login() {
                                 error={errors.email}
                                 helperText={errors.email?.message}
                             />
-                        </Grid> */}
-                        <Button variant="contained" sx={{ ...styleBtnAdd }}>Lấy lại mật khẩu</Button>
+                        </Grid>
+                        <Button variant="contained" sx={{ ...styleBtnAdd }}>
+                            Lấy lại mật khẩu
+                        </Button>
                     </Grid>
                 </Grid>
             </form>
         </>
-
-    )
+    );
 }
 
 const styleBtnAdd = {
@@ -110,27 +142,4 @@ const styleBtnAdd = {
     '&:hover': {
         bgcolor: '#112637',
     },
-}
-
-const styleTextField = {
-    '& label': {
-        color: 'gray',
-    },
-    '& label.Mui-focused': {
-        color: 'gray',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#ddd',
-            border: '1px solid #ddd'
-        },
-        '&:hover fieldset': {
-            borderColor: '#ddd',
-            border: '1px solid #ddd'
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#ddd',
-            border: '1px solid #ddd'
-        },
-    }
-}
+};
