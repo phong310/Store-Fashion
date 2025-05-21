@@ -13,6 +13,10 @@ import PriceFilter from './PriceFilter';
 import ProductFilter from './ProductFilter';
 import SizeFilter from './SizeFilter';
 import { convertPrice } from '../../../lib/common';
+import { Drawer, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 export default function ProductsCommon() {
   const [anchorElRanger, setAnchorElRanger] = useState(null);
@@ -30,6 +34,11 @@ export default function ProductsCommon() {
   const [data, setData] = useState([]);
   const typeUrl = type === 'clothing' ? 'clothing-collection' : type === 'shoe' ? 'shoe-collection' : 'accessories-collection'
   const [prdLength, setPrdLength] = useState()
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const toggleDrawer = (open) => () => {
+    setIsDrawerOpen(open);
+  };
 
   const handleClick = (event) => {
     setAnchorElRanger(event.currentTarget);
@@ -161,8 +170,42 @@ export default function ProductsCommon() {
   return (
     <>
       <BreadCumbs pageName={type === 'clothing' ? 'Clothing' : type === 'shoe' ? 'Shoe' : 'Accessories'} />
-      <Grid container alignItems={'flex-start'} sx={{ mb: 20, px: 38, mt: 4 }}>
-        <Grid item sm={3}>
+      <Grid item xs={12} display={{ md: 'block', lg: 'none' }} sx={{ mb: 2 }}>
+        <IconButton
+          onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+          size="large"
+          sx={{
+            position: 'fixed',
+            top: '40%',
+            right: isDrawerOpen ? 280 : 0,
+            transform: 'translateY(-50%)',
+            zIndex: 1301,
+            backgroundColor: 'white',
+            borderRadius: '4px 0 0 4px',
+            border: '1px solid #ddd',
+            boxShadow: 2,
+            transition: 'right 0.3s ease',
+            color: 'black',
+            '&:hover': {
+              backgroundColor: 'white',
+              color: 'black',
+            },
+          }}
+        >
+          {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
+        </IconButton>
+
+
+      </Grid>
+      <Grid container
+        alignItems="flex-start"
+        justifyContent={{ xs: 'center', lg: 'flex-start' }}
+        sx={{
+          mb: 20,
+          px: { xs: 2, sm: 4, md: 8, lg: 16, xl: 38 },
+          mt: 4,
+        }}>
+        <Grid item sm={3} display={{ xs: 'none', lg: 'block' }}>
           <Categories />
           <PriceFilter onPriceChange={handlePriceChange} />
           <ColorFilter />
@@ -171,7 +214,7 @@ export default function ProductsCommon() {
           <OutstandingPrd />
         </Grid>
         <Grid item sm={9}>
-          <Grid display={'flex'} justifyContent={'space-between'} alignItems={'flex-start'} gap={4} sx={{ borderBottom: '1px solid #ebebeb' }}>
+          <Grid display={'flex'} justifyContent={'space-between'} alignItems={'flex-start'} gap={4} sx={{ borderBottom: '1px solid #ebebeb', flexDirection:{xs:'column', md:'unset'} }}>
             <Typography sx={{ ...styleTitle }}>
               {type === 'clothing' ? `Quần áo (${prdLength && !minPrice && !maxPrice && !sizeShoe ? prdLength : data.length} sản phẩm)`
                 : type === 'shoe' ? `Giày (${prdLength && !minPrice && !maxPrice && !sizeShoe ? prdLength : data.length} sản phẩm)`
@@ -195,7 +238,7 @@ export default function ProductsCommon() {
               MenuListProps={{ onMouseLeave: handleClose }}
               PaperProps={{
                 style: {
-                  width: '10%',
+                  width: {xs:'40%', md:'20%', }
                 },
               }}
             >
@@ -223,6 +266,27 @@ export default function ProductsCommon() {
           </Grid>
         </Grid>
       </Grid>
+
+      {/* Filter screen mobile */}
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        ModalProps={{
+          keepMounted: true, // giữ lại DOM giúp chuyển động mượt
+        }}
+      >
+        <div style={{ width: 280, padding: 16 }}>
+          <Categories />
+          <PriceFilter onPriceChange={handlePriceChange} />
+          <ColorFilter />
+          <SizeFilter onSizeChange={handleSizeChange} type={type} />
+          <ProductFilter />
+          <OutstandingPrd />
+        </div>
+      </Drawer>
+
+
     </>
   );
 }
