@@ -12,19 +12,18 @@ import { toast } from 'react-toastify';
 
 const SearchScreen = () => {
     const [results, setResults] = useState([]);
-    const [totalResult, setTotalResult] = useState()
+    const [totalResult, setTotalResult] = useState();
     const [isLoading, setIsLoading] = useState(true);
-    const [openCart, setOpenCart] = useState(false)
+    const [openCart, setOpenCart] = useState(false);
     const [page, setPage] = useState(1);
     const navigate = useNavigate();
     const location = useLocation();
     const itemsPerPage = 8;
-    const [searchText, setSearchText] = useState()
+    const [searchText, setSearchText] = useState();
 
-    // Lấy từ khóa tìm kiếm từ query parameter
     const queryParams = new URLSearchParams(location.search);
     const query = queryParams.get('q');
-    const pageName = `Tìm kiếm từ khóa '${query}'`
+    const pageName = `Tìm kiếm từ khóa '${query}'`;
 
     const fetchSearchResults = async () => {
         setIsLoading(true);
@@ -39,8 +38,8 @@ const SearchScreen = () => {
             });
             if (response) {
                 setResults(response.data.results);
-                setTotalResult(response.data.total)
-                setSearchText(query)
+                setTotalResult(response.data.total);
+                setSearchText(query);
             }
         } catch (error) {
             console.error('Lỗi khi tìm kiếm');
@@ -53,17 +52,14 @@ const SearchScreen = () => {
         }
     };
 
-
     const handleSearch = () => {
         if (searchText) {
-            setPage(1)
+            setPage(1);
             navigate(`/search?q=${encodeURIComponent(searchText)}`);
         } else {
-            toast.warn("Vui lòng nhập từ khóa tìm kiếm")
+            toast.warn("Vui lòng nhập từ khóa tìm kiếm");
         }
-
-    }
-
+    };
 
     useEffect(() => {
         if (query) {
@@ -77,9 +73,9 @@ const SearchScreen = () => {
 
             {isLoading && <LoadingOverLay />}
 
-            <Grid sx={{ mb: 20, px: 38, mt: 4 }}>
+            <Grid sx={{ mb: 20, px: { xs: 2, sm: 4, md: 8, lg: 20, xl: 38 }, mt: 4 }}>
                 <Typography variant='h5' fontWeight={'bold'}>NHẬP TỪ KHÓA ĐỂ TÌM KIẾM SẢN PHẨM</Typography>
-                <Grid sx={{ display: 'flex', gap: 2, mt: '20px', mb: '40px' }}>
+                <Grid sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, mt: '20px', mb: '40px' }}>
                     <TextField
                         type="text"
                         fullWidth
@@ -88,88 +84,93 @@ const SearchScreen = () => {
                         size="small"
                         variant="outlined"
                         sx={{
-                            width: '30%',
+                            maxWidth: 400,
                             '& .MuiOutlinedInput-root': {
                                 borderRadius: '50px',
                             },
                         }}
                     />
 
-
                     <Button type="submit" variant="contained" sx={styleBtnAdd} onClick={handleSearch}>
                         Tìm kiếm
                     </Button>
                 </Grid>
-                {results.length > 0 ? <Typography variant='h5' fontWeight={'bold'} sx={{ mb: '50px' }}>CÓ {totalResult} KẾT QUẢ TÌM KIẾM PHÙ HỢP</Typography> : ''}
 
-                <Grid container justifyContent={'center'} spacing={4} sx={{ textAlign: 'center' }}>
-                    {results.length > 0 ?
-                        results.map((item, idx) => {
-                            return (
-                                <Grid item key={idx} sx={{ position: 'relative' }}>
-                                    <div className="shoe-container">
-                                        <img src={item.img[0]} style={styleImg} />
-                                        <div className="overlay"></div>
-                                        <Grid className="icon-container" display={'flex'} direction={'column'} gap={1}>
-                                            <IconButton sx={{ ...iconButtonHover }} onClick={() => setOpenCart(true)}>
-                                                <ShoppingCartIcon />
-                                            </IconButton>
-                                            <IconButton sx={{ ...iconButtonHover }}>
-                                                <ZoomInIcon />
-                                            </IconButton>
-                                        </Grid>
-                                    </div>
-                                    <Link to={`/products/${item._id}?type=${item.category}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                        <Typography sx={{ ...TypoTitle }}>{item.name}</Typography>
-                                    </Link>
-                                    <Rating name="no-value" value={item.rating} />
-                                    <Typography>{item.price}</Typography>
+                {results.length > 0 && (
+                    <Typography variant='h5' fontWeight={'bold'} sx={{ mb: '50px' }}>
+                        CÓ {totalResult} KẾT QUẢ TÌM KIẾM PHÙ HỢP
+                    </Typography>
+                )}
+
+                <Grid container spacing={4} justifyContent='center' textAlign='center'>
+                    {results.length > 0 ? results.map((item, idx) => (
+                        <Grid item key={idx} xs={12} sm={6} md={4} lg={3} sx={{ position: 'relative' }}>
+                            <div className="shoe-container">
+                                <img src={item.img[0]} style={styleImg} />
+                                <div className="overlay"></div>
+                                <Grid className="icon-container" display={'flex'} direction={'column'} gap={1}>
+                                    <IconButton sx={iconButtonHover} onClick={() => setOpenCart(true)}>
+                                        <ShoppingCartIcon />
+                                    </IconButton>
+                                    <IconButton sx={iconButtonHover}>
+                                        <ZoomInIcon />
+                                    </IconButton>
                                 </Grid>
-                            )
-                        })
-                        : (
-                            <Typography variant='h4' fontWeight={'bold'} sx={{ my: '100px' }}>Không tìm thấy bất kỳ kết quả nào với từ khóa trên...</Typography>
-                        )}
+                            </div>
+                            <Link to={`/products/${item._id}?type=${item.category}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <Typography sx={TypoTitle}>{item.name}</Typography>
+                            </Link>
+                            <Rating name="no-value" value={item.rating} />
+                            <Typography>{item.price}</Typography>
+                        </Grid>
+                    )) : (
+                        <Typography variant='h4' fontWeight='bold' sx={{ my: 10, textAlign: 'center' }}>
+                            Không tìm thấy bất kỳ kết quả nào với từ khóa trên...
+                        </Typography>
+                    )}
                 </Grid>
-                {totalResult > 0 ? <Grid display={'flex'} justifyContent={'flex-end'} sx={{ mt: 10 }}>
-                    <Stack spacing={2}>
-                        <Pagination
-                            count={Math.ceil(totalResult / itemsPerPage)}
-                            page={page}
-                            onChange={(event, value) => setPage(value)}
-                            variant="outlined"
-                            shape="rounded"
-                        />
-                    </Stack>
-                </Grid> : ''}
+
+                {totalResult > 0 && (
+                    <Grid display='flex' justifyContent='flex-end' sx={{ mt: 10 }}>
+                        <Stack spacing={2}>
+                            <Pagination
+                                count={Math.ceil(totalResult / itemsPerPage)}
+                                page={page}
+                                onChange={(event, value) => setPage(value)}
+                                variant="outlined"
+                                shape="rounded"
+                            />
+                        </Stack>
+                    </Grid>
+                )}
             </Grid>
         </>
     );
-}
+};
 
-export default SearchScreen
-
+export default SearchScreen;
 
 const iconButtonHover = {
     backgroundColor: 'white',
-    color: 'black'
-}
-iconButtonHover[':hover'] = {
-    backgroundColor: 'black',
-    color: 'white'
-}
+    color: 'black',
+    ':hover': {
+        backgroundColor: 'black',
+        color: 'white',
+    },
+};
 
-export const styleImg = {
+const styleImg = {
     width: '100%',
-    height: 300,
-    maxWidth: 300,
-    objectFit: 'cover'
-}
-
+    height: { xs: 200, sm: 250, md: 300 },
+    objectFit: 'cover',
+    borderRadius: 8
+};
 
 const TypoTitle = {
-    width: 300
-}
-TypoTitle[':hover'] = {
-    cursor: 'pointer'
-}
+    width: '100%',
+    maxWidth: 300,
+    margin: '0 auto',
+    ':hover': {
+        cursor: 'pointer'
+    }
+};

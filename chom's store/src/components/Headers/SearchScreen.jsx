@@ -1,7 +1,17 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, styled } from '@mui/material';
+import {
+    Box,
+    FormControl,
+    Grid,
+    IconButton,
+    Input,
+    InputAdornment,
+    InputLabel,
+    styled,
+    useMediaQuery
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,8 +24,9 @@ const RotatableIconButton = styled(IconButton)({
 
 export default function SearchScreen({ handleCloseSearch }) {
     const [showSearch, setShowSearch] = useState(false);
-    const [searchTerm, setSearchTerm] = useState(""); 
-    const navigate = useNavigate(); 
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         setShowSearch(true);
@@ -28,37 +39,68 @@ export default function SearchScreen({ handleCloseSearch }) {
     const handleSearchSubmit = () => {
         if (searchTerm) {
             navigate(`/search?q=${searchTerm}`);
-            setShowSearch(false)
+            setShowSearch(false);
         }
     };
 
     return (
-        <>
-            <Grid sx={{ ...styleGrid, opacity: showSearch ? 1 : 0 }}>
-                <RotatableIconButton onClick={handleCloseSearch} sx={{ ...styleIconClose }}>
-                    <CloseIcon sx={{ fontSize: 30 }} />
-                </RotatableIconButton>
-                <Box sx={{ ...styleSearchBox }}>
-                    <FormControl fullWidth variant="standard">
-                        <InputLabel htmlFor="standard-adornment-amount" color='grey' sx={{ fontSize: 20 }}>Nhập sản phẩm để tìm kiếm</InputLabel>
-                        <Input
-                            style={{ ...styleInputSearch }}
-                            color='grey'
-                            id="standard-adornment-amount"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            startAdornment={<InputAdornment position="start">
-                                <SearchIcon sx={{ ...styleIcon }} />
-                            </InputAdornment>}
-                            placeholder="Tìm..."
-                        />
-                    </FormControl>
-                    <IconButton onClick={handleSearchSubmit}>
-                        <ArrowForwardIcon sx={{ ...styleIcon }} />
-                    </IconButton>
-                </Box>
-            </Grid>
-        </>
+        <Grid sx={{ ...styleGrid, opacity: showSearch ? 1 : 0 }}>
+            <RotatableIconButton
+                onClick={handleCloseSearch}
+                sx={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    color: 'black',
+                    zIndex: 2
+                }}
+            >
+                <CloseIcon sx={{ fontSize: isMobile ? 24 : 30 }} />
+            </RotatableIconButton>
+
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: 'center',
+                    width: { xs: '90%', sm: '80%' },
+                    px: { xs: 2, sm: 30 },
+                    gap: 2
+                }}
+            >
+                <FormControl fullWidth variant="standard">
+                    <InputLabel
+                        htmlFor="standard-adornment-amount"
+                        sx={{ fontSize: { xs: 16, sm: 20 } }}
+                    >
+                        Nhập sản phẩm để tìm kiếm
+                    </InputLabel>
+                    <Input
+                        id="standard-adornment-amount"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Tìm..."
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <SearchIcon sx={{ fontSize: { xs: 24, sm: 32 } }} />
+                            </InputAdornment>
+                        }
+                        sx={{
+                            fontSize: { xs: 20, sm: 28 },
+                            fontWeight: 'bold',
+                            height: 60
+                        }}
+                    />
+                </FormControl>
+
+                <IconButton
+                    onClick={handleSearchSubmit}
+                    sx={{ mt: { xs: 2, sm: 0 } }}
+                >
+                    <ArrowForwardIcon sx={{ fontSize: { xs: 30, sm: 40 } }} />
+                </IconButton>
+            </Box>
+        </Grid>
     );
 }
 
@@ -72,30 +114,6 @@ const styleGrid = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    transition: 'opacity 0.4s ease'
-};
-
-const styleSearchBox = {
-    display: 'flex',
-    alignItems: 'center',
-    width: '80%',
-    px: 40,
-    position: 'relative'
-};
-
-const styleIconClose = {
-    position: 'absolute',
-    top: 6,
-    right: 10,
-    color: 'black',
-};
-
-const styleIcon = {
-    fontSize: 40
-};
-
-const styleInputSearch = {
-    height: 60,
-    fontSize: 28,
-    fontWeight: 'bold'
+    transition: 'opacity 0.4s ease',
+    zIndex: 1000
 };
