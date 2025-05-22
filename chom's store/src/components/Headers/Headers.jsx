@@ -148,7 +148,7 @@ export default function Headers() {
                     </Grid>
                 </Grid>
 
-                <Divider variant="fullWidth" sx={{ display: { xs: 'none', md: 'none', lg: 'flex' }}}/>
+                <Divider variant="fullWidth" sx={{ display: { xs: 'none', md: 'none', lg: 'flex' } }} />
 
                 {/* Menu mobile*/}
                 <HeaderMobile
@@ -157,11 +157,7 @@ export default function Headers() {
                     handleAccess={handleAccess}
                     handleShoes={handleShoes}
                 />
-            
-
             </Box>
-
-
         </Box>
     )
 }

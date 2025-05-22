@@ -2,13 +2,14 @@ import React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, MenuItem, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
-import { basketballShoes, casualShoesMenu, clothingMenu } from './MenuProducts';
+import { accessoriesMenu, basketballShoes, casualShoesMenu, clothingMenu } from './MenuProducts';
 import { useNavigate } from 'react-router';
 
 const HeaderMobile = ({
     handleClose,
     handleClothing,
-    handleShoes
+    handleShoes,
+    handleAccess
 }) => {
     const drawerWidth = 20;
     const navigate = useNavigate()
@@ -87,6 +88,25 @@ const HeaderMobile = ({
                                     </motion.div>
                                 )
                             })}
+                        </AccordionDetails>
+                        <AccordionDetails>
+                                <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline', mb: 2 }}>ACCESSORIES</Typography>
+                                {accessoriesMenu.map((item, idx) => {
+                                    return (
+                                        <motion.div
+                                            initial={{ x: -drawerWidth }}
+                                            animate={{ x: 0 }}
+                                            exit={{ x: -drawerWidth }}
+                                            transition={{ type: 'tween', duration: 0.5 }}
+                                            whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
+                                            whileTap={{ scale: 0.9 }}
+                                        >
+                                            <MenuItem key={idx} onClick={handleAccess} sx={{ ...fontSizeComon }}>
+                                                {item.name}
+                                            </MenuItem>
+                                        </motion.div>
+                                    )
+                                })}
                         </AccordionDetails>
                         <AccordionDetails>
                             <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline', mb: 2 }}>CLEANING SERVICE</Typography>
