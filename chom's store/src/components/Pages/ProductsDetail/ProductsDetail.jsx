@@ -96,8 +96,8 @@ export default function ProductsDetail() {
       quantity: quantity,
       size: size,
       notes: '',
-      price: stringToNumber(DataDetail?.price),
-      subtotal: stringToNumber(DataDetail?.price) * quantity,
+      price: DataDetail?.price,
+      subtotal: DataDetail?.price * quantity,
       description: ''
     }
 

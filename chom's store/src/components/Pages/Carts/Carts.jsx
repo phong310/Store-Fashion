@@ -1,19 +1,22 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Button, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import {
+    Button, Grid, IconButton, Paper,
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
+} from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import axiosInstance from '../../../config/axiosInstance';
-import { formatCurrency } from '../../../lib/transform';
-import { deleteItemFaild, deleteItemStart, deleteItemSuccess } from '../../../redux/deleteCartSlice';
-import BreadCumbs from '../../Breadcumbs/BreadCumbs';
-import { getCartFaild, getCartStart, getCartSuccess } from '../../../redux/cartSlice';
-import { increaseItemFailed, increaseItemStart, increaseItemSuccess } from '../../../redux/increaseCartSlice';
-import { decreaseItemStart, decreaseItemSuccess } from '../../../redux/decreaseCartSlice';
 import { calculateTotal } from '../../../lib/common';
-import { useNavigate } from 'react-router';
+import { formatCurrency } from '../../../lib/transform';
+import { getCartFaild, getCartStart, getCartSuccess } from '../../../redux/cartSlice';
+import { decreaseItemStart, decreaseItemSuccess } from '../../../redux/decreaseCartSlice';
+import { deleteItemStart, deleteItemSuccess } from '../../../redux/deleteCartSlice';
+import { increaseItemFailed, increaseItemStart, increaseItemSuccess } from '../../../redux/increaseCartSlice';
+import BreadCumbs from '../../Breadcumbs/BreadCumbs';
 
 
 export const dataCart = [
@@ -34,7 +37,6 @@ export const dataCart = [
         totalPrice: '4.450.000₫'
     },
 ]
-
 
 export default function Carts() {
     const user = useSelector((state) => state.auth.login?.currentUser)
@@ -114,66 +116,81 @@ export default function Carts() {
         getAllCart()
     }, [])
 
-
     return (
         <>
             <BreadCumbs pageName='Giỏ hàng' />
             {user && data?.length > 0 ? <>
                 <Grid>
-                    <Typography variant='h5' sx={{ ...styleTypo }}>GIỎ HÀNG CỦA BẠN</Typography>
+                    <Typography variant='h5' sx={styleTypo}>GIỎ HÀNG CỦA BẠN</Typography>
                 </Grid>
-                <Grid container justifyContent={'center'} sx={{ mb: 15 }}>
-                    <Grid item sm={8}>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                <TableHead >
-                                    <TableRow>
-                                        <TableCell align="center" sx={{ ...textBold }}>Hình ảnh</TableCell>
-                                        <TableCell align="center" sx={{ ...textBold }}>Tên sản phẩm</TableCell>
-                                        <TableCell align="center" sx={{ ...textBold }}>Đơn giá</TableCell>
-                                        <TableCell align="center" sx={{ ...textBold }}>Số lượng</TableCell>
-                                        <TableCell align="center" sx={{ ...textBold }}>Thành tiền</TableCell>
-                                        <TableCell align="center" sx={{ ...textBold }}>Chức năng</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {data.map((row) => (
-                                        <TableRow key={row.name}>
-                                            <TableCell component="th" scope="row">
-                                                <img src={row.img} width={240} height={240} />
-                                            </TableCell>
-                                            <TableCell align="center">{row.product}</TableCell>
-                                            <TableCell align="center" sx={{ ...textBold }}>{formatCurrency(row.price)}</TableCell>
-                                            <TableCell align="center">
-                                                <Grid alignItems="center" gap={1} sx={{ ...styleQuantity }}>
-                                                    <IconButton onClick={() => handleDecrease(row)}>
-                                                        <RemoveIcon sx={{ ...styleIcon }} />
-                                                    </IconButton>
-                                                    <Typography>{row.quantity}</Typography>
-                                                    <IconButton onClick={() => handleIncrease(row)}>
-                                                        <AddIcon sx={{ ...styleIcon }} />
-                                                    </IconButton>
-                                                </Grid>
-                                            </TableCell>
-                                            <TableCell align="center" sx={{ ...textBold }}>{formatCurrency(row.subtotal)}</TableCell>
-                                            <TableCell align="center">
-                                                <IconButton onClick={() => handelDelete(row._id)}>
-                                                    <DeleteForeverIcon />
-                                                </IconButton>
-                                            </TableCell>
+                <Grid container justifyContent='center' sx={{ mb: 15 }}>
+                    <Grid item xs={12} sm={10} md={8}>
+                        <Grid sx={{ overflowX: 'auto' }}>
+                            <TableContainer component={Paper}>
+                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center" sx={textBold}>Hình ảnh</TableCell>
+                                            <TableCell align="center" sx={textBold}>Tên sản phẩm</TableCell>
+                                            <TableCell align="center" sx={textBold}>Đơn giá</TableCell>
+                                            <TableCell align="center" sx={textBold}>Số lượng</TableCell>
+                                            <TableCell align="center" sx={textBold}>Thành tiền</TableCell>
+                                            <TableCell align="center" sx={textBold}>Chức năng</TableCell>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <Typography sx={{ ...styleTypoTotal }}>Tổng tiền:
-                            <span style={{ color: 'red', fontWeight: 'bold' }}>
-                                {formatCurrency(calculateTotal(data))}
-                            </span>
+                                    </TableHead>
+                                    <TableBody>
+                                        {data.map((row) => (
+                                            <TableRow key={row.name}>
+                                                <TableCell>
+                                                    <img
+                                                        src={row.img}
+                                                        style={{
+                                                            width: '100%',
+                                                            maxWidth: 120,
+                                                            height: 'auto',
+                                                            objectFit: 'contain',
+                                                            borderRadius: 8
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell align="center">{row.product}</TableCell>
+                                                <TableCell align="center" sx={textBold}>{formatCurrency(row.price)}</TableCell>
+                                                <TableCell align="center">
+                                                    <Grid alignItems="center" gap={1} sx={styleQuantity}>
+                                                        <IconButton onClick={() => handleDecrease(row)}>
+                                                            <RemoveIcon sx={styleIcon} />
+                                                        </IconButton>
+                                                        <Typography>{row.quantity}</Typography>
+                                                        <IconButton onClick={() => handleIncrease(row)}>
+                                                            <AddIcon sx={styleIcon} />
+                                                        </IconButton>
+                                                    </Grid>
+                                                </TableCell>
+                                                <TableCell align="center" sx={textBold}>{formatCurrency(row.subtotal)}</TableCell>
+                                                <TableCell align="center">
+                                                    <IconButton onClick={() => handelDelete(row._id)}>
+                                                        <DeleteForeverIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Grid>
+                        <Typography sx={styleTypoTotal}>
+                            Tổng tiền: <span style={{ color: 'red', fontWeight: 'bold' }}>{formatCurrency(calculateTotal(data))}</span>
                         </Typography>
-                        <Grid display={'flex'} alignContent={'center'} gap={2} justifyContent={'flex-end'}>
-                            <Button variant="contained" sx={{ ...styleBtnContinue }}>Tiếp tục mua hàng</Button>
-                            <Button variant="contained" sx={{ ...styleBtnAdd }} onClick={handelCheckout}>Tiến hành đặt hàng</Button>
+                        <Grid
+                            display="flex"
+                            flexDirection={{ xs: 'column', sm: 'row' }}
+                            alignItems="center"
+                            gap={2}
+                            justifyContent={{ xs: 'center', sm: 'flex-end' }}
+                            mt={2}
+                        >
+                            <Button variant="contained" sx={styleBtnContinue}>Tiếp tục mua hàng</Button>
+                            <Button variant="contained" sx={styleBtnAdd} onClick={handelCheckout}>Tiến hành đặt hàng</Button>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -181,7 +198,6 @@ export default function Carts() {
                 <Grid>
                     <Typography variant='h5' sx={{ my: 20, textAlign: 'center', color: 'gray', fontWeight: 'bold', fontSize: 30 }}>Không có sản phẩm !</Typography>
                 </Grid>}
-
         </>
     )
 }
@@ -212,7 +228,7 @@ const textBold = {
 }
 
 const styleTypo = {
-    ml: 38,
+    ml: { xs: 2, sm: 4, md: 10, lg: 40 },
     my: 5,
     fontWeight: 'bold'
 }
@@ -220,7 +236,7 @@ const styleTypo = {
 const styleQuantity = {
     border: '1px solid #ddd',
     borderRadius: '20px',
-    display:'inline-flex'
+    display: 'inline-flex'
 }
 
 const styleIcon = {
@@ -230,5 +246,6 @@ const styleIcon = {
 const styleTypoTotal = {
     textAlign: 'right',
     my: 4,
-    fontSize: 20
-}
+    fontSize: 20,
+    mr: { xs: 2, md: 'unset' }
+} 
