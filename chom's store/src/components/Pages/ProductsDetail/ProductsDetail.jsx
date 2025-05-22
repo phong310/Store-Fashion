@@ -24,6 +24,7 @@ import { toast } from 'react-toastify';
 import axiosInstance from '../../../config/axiosInstance';
 import { stringToNumber } from '../../../lib/transform';
 import { addToCartSuccess } from '../../../redux/actionCartSlice';
+import { formatCurrencyVND } from '../../../lib/common';
 
 export default function ProductsDetail() {
   const { id } = useParams();
@@ -131,33 +132,23 @@ export default function ProductsDetail() {
   return (
     <>
       <BreadCumbs pageName={breadcumbs} itemPage={DataDetail?.name} />
-      <Grid container justifyContent={'center'} gap={6} alignItems={'flex-start'} sx={{ mt: 6, mb: 6 }}>
-        <Grid item sx={{ textAlign: 'center', mt: 14 }}>
-          <Swiper
-            slidesPerView={3}
-            spaceBetween={1}
-            className="mySwiper"
-            modules={[Navigation]}
-            navigation={true}
-            direction={'vertical'}
-            style={{
-              width: '100%',
-              height: '400px',
-            }}
-
-          >
-            {DataDetail?.img.map((item, idx) => {
-              return (
-                <SwiperSlide key={idx}>
-                  <Box sx={{ border: '1px solid #e1e1e1', cursor: 'pointer' }} onClick={() => handleImageClick(item)}>
-                    <img src={item} style={{ width: 90 }} />
-                  </Box>
-                </SwiperSlide>
-              )
-            })}
-          </Swiper>
-        </Grid>
-        <Grid item sm={3}>
+      <Grid container
+        spacing={2}
+        sx={{
+          mt: 6,
+          mb: 6,
+          padding: { xs: '0 10px', lg: '0 63px' },
+          flexDirection: {
+            xs: 'column',
+            md: 'row'
+          },
+          alignItems: {
+            xs: 'center',
+            md: 'flex-start'
+          },
+          justifyContent: 'center'
+        }}>
+        <Grid item order={{ xs: 1, md: 2 }} xs={12} md={4}>
           <ReactImageMagnify
             {...{
               smallImage: {
@@ -178,7 +169,29 @@ export default function ProductsDetail() {
             }}
           />
         </Grid>
-        <Grid item>
+        <Grid item order={{ xs: 2, md: 1 }} xs={12} md={'auto'} sx={{ textAlign: 'center', mt: { xs: 4, md: 14 } }}>
+          <Swiper
+            slidesPerView={3}
+            spaceBetween={1}
+            className="mySwiper"
+            modules={[Navigation]}
+            navigation={true}
+            direction={'vertical'}
+            style={{
+              width: '100%',
+              height: '400px',
+            }}
+          >
+            {DataDetail?.img.map((item, idx) => (
+              <SwiperSlide key={idx}>
+                <Box sx={{ border: '1px solid #e1e1e1', cursor: 'pointer' }} onClick={() => handleImageClick(item)}>
+                  <img src={item} style={{ width: 90 }} />
+                </Box>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Grid>
+        <Grid item order={{ xs: 3, md: 3 }} xs={12} md={4}>
           <Typography sx={{ fontWeight: 'bold', mb: 2, }}>{DataDetail?.name}</Typography>
           <Grid display={'flex'} alignItems={'center'} gap={1} sx={{ mb: 1 }}>
             <Rating name="no-value" value={DataDetail?.rating} />
@@ -189,7 +202,7 @@ export default function ProductsDetail() {
             <span style={{ color: '#898989' }}>{DataDetail?.code}</span>
           </Typography>
           <Divider />
-          <Typography variant='h4' sx={{ my: 6 }}>{DataDetail?.price}</Typography>
+          <Typography variant='h4' sx={{ my: 6 }}>{formatCurrencyVND(DataDetail?.price)}</Typography>
           <Typography sx={{ color: '#898989', mb: 4, fontSize: 14 }}>Thông tin sản phẩm đang được cập nhật</Typography>
           {DataDetail?.size.length > 0 ? <Grid display={'flex'} alignItems={'center'} sx={{ my: 2 }} >
             <Typography sx={{ minWidth: 100, fontSize: 14 }}>Kích thước:</Typography>

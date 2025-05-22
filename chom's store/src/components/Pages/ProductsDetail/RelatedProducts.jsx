@@ -11,10 +11,23 @@ export default function RelatedProducts() {
     return (
         <>
             <Typography sx={{ ...styleTypo }}>SẢN PHẨM LIÊN QUAN</Typography>
-            <Grid container justifyContent={'center'} spacing={4} sx={{ ...styleGridContainer }}>
+            <Grid c container
+                justifyContent="center"
+                spacing={4}
+                sx={{
+                    px: { xs: 2, sm: 4, md: 10, lg:44 },
+                    mb: 20,
+                    textAlign: 'center',
+                }}>
                 {bestSellingItems.map((item, idx) => {
                     return (
-                        <Grid item key={idx} sx={{ position: 'relative' }}>
+                        <Grid item
+                            key={idx}
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            sx={{ position: 'relative'}}>
                             <div className="shoe-container">
                                 <img src={item.img} style={styleImg} />
                                 <div className="overlay"></div>
@@ -54,9 +67,10 @@ const styleGridContainer = {
 const styleImg = {
     width: '100%',
     height: 300,
-    maxWidth: 300,
-    objectFit: 'cover'
+    objectFit: 'cover',
+    borderRadius: 8
 }
+  
 
 
 const iconButtonHover = {
